@@ -7,33 +7,31 @@ const db = new sqlite3.Database('./Database/Animal.sqlite');
 app.use(express.json());
 app.use(express.static(__dirname + '/Myproject'));
 
-// สร้างตาราง AirAnimal
-db.run(`CREATE TABLE IF NOT EXISTS AirAnimal (
+// สร้างตาราง Habitat of Animal
+db.run(`CREATE TABLE IF NOT EXISTS HabitatOfAnimal (
+    AnimalID INTEGER PRIMARY KEY,
+    HabitatId INTEGER,
+)`);
+
+// สร้างตาราง Animal
+db.run(`CREATE TABLE IF NOT EXISTS Animal (
     ID INTEGER PRIMARY KEY,
     Name TEXT,
     Data TEXT,
     Pic VARCHAR
 )`);
 
-// สร้างตาราง LandAnimal
-db.run(`CREATE TABLE IF NOT EXISTS LandAnimal (
+// สร้างตาราง Habitat
+db.run(`CREATE TABLE IF NOT EXISTS Habitat (
     ID INTEGER PRIMARY KEY,
     Name TEXT,
     Data TEXT,
-    Pic VARCHAR 
+    Pic VARCHAR
 )`);
 
-// สร้างตาราง WaterAnimal
-db.run(`CREATE TABLE IF NOT EXISTS WaterAnimal (
-    ID INTEGER PRIMARY KEY,
-    Name TEXT,
-    Data TEXT,
-    Pic VARCHAR 
-)`);
-
-//  CRUD สำหรับ AirAnimal
-app.get('/airanimals', (req, res) => {
-    db.all('SELECT * FROM AirAnimal', (err, rows) => {
+// CRUD สำหรับ HabitatOfAnimal
+app.get('/HabitatOfAnimal', (req, res) => {
+    db.all('SELECT * FROM HabitatOfAnimal', (err, rows) => {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -42,13 +40,13 @@ app.get('/airanimals', (req, res) => {
     });
 });
 
-app.get('/airanimals/:id', (req, res) => {
-    db.get('SELECT * FROM AirAnimal WHERE ID = ?', req.params.id, (err, row) => {
+app.get('/HabitatOfAnimal/:id', (req, res) => {
+    db.get('SELECT * FROM HabitatOfAnimal WHERE AnimalID = ?', req.params.id, (err, row) => {
         if (err) {
             res.status(500).send(err);
         } else {
             if (!row) {
-                res.status(404).send('AirAnimal Not found');
+                res.status(404).send('HabitatOfAnimal Not found');
             } else {
                 res.json(row);
             }
@@ -56,31 +54,31 @@ app.get('/airanimals/:id', (req, res) => {
     });
 });
 
-app.post('/airanimals', (req, res) => {
-    const animal = req.body;
-    db.run('INSERT INTO AirAnimal (Name, Data, Pic) VALUES (?, ?, ?)', animal.Name, animal.Data, animal.Pic, function (err) {
+app.post('/HabitatOfAnimal', (req, res) => {
+    const habitatOfAnimal = req.body;
+    db.run('INSERT INTO HabitatOfAnimal (AnimalID, HabitatId) VALUES (?, ?)', habitatOfAnimal.AnimalID, habitatOfAnimal.HabitatId, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
-            animal.ID = this.lastID;
-            res.send(animal);
+            habitatOfAnimal.AnimalID = this.lastID;
+            res.send(habitatOfAnimal);
         }
     });
 });
 
-app.put('/airanimals/:id', (req, res) => {
-    const animal = req.body;
-    db.run('UPDATE AirAnimal SET Name = ?, Data = ?, Pic = ? WHERE ID = ?', animal.Name, animal.Data, animal.Pic, req.params.id, function (err) {
+app.put('/HabitatOfAnimal/:id', (req, res) => {
+    const habitatOfAnimal = req.body;
+    db.run('UPDATE HabitatOfAnimal SET AnimalID = ?, HabitatId = ? WHERE AnimalID = ?', habitatOfAnimal.AnimalID, habitatOfAnimal.HabitatId, req.params.id, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
-            res.send(animal);
+            res.send(habitatOfAnimal);
         }
     });
 });
 
-app.delete('/airanimals/:id', (req, res) => {
-    db.run('DELETE FROM AirAnimal WHERE ID = ?', req.params.id, function (err) {
+app.delete('/HabitatOfAnimal/:id', (req, res) => {
+    db.run('DELETE FROM HabitatOfAnimal WHERE AnimalID = ?', req.params.id, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -89,9 +87,9 @@ app.delete('/airanimals/:id', (req, res) => {
     });
 });
 
-//  CRUD สำหรับ LandAnimal
-app.get('/landanimals', (req, res) => {
-    db.all('SELECT * FROM LandAnimal', (err, rows) => {
+// CRUD สำหรับ Animal
+app.get('/Animal', (req, res) => {
+    db.all('SELECT * FROM Animal', (err, rows) => {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -100,13 +98,13 @@ app.get('/landanimals', (req, res) => {
     });
 });
 
-app.get('/landanimals/:id', (req, res) => {
-    db.get('SELECT * FROM LandAnimal WHERE ID = ?', req.params.id, (err, row) => {
+app.get('/Animal/:id', (req, res) => {
+    db.get('SELECT * FROM Animal WHERE ID = ?', req.params.id, (err, row) => {
         if (err) {
             res.status(500).send(err);
         } else {
             if (!row) {
-                res.status(404).send('LandAnimal Not found');
+                res.status(404).send('Animal Not found');
             } else {
                 res.json(row);
             }
@@ -114,9 +112,9 @@ app.get('/landanimals/:id', (req, res) => {
     });
 });
 
-app.post('/landanimals', (req, res) => {
+app.post('/Animal', (req, res) => {
     const animal = req.body;
-    db.run('INSERT INTO LandAnimal (Name, Data, Pic) VALUES (?, ?, ?)', animal.Name, animal.Data, animal.Pic, function (err) {
+    db.run('INSERT INTO Animal (Name, Data, Pic) VALUES (?, ?, ?)', animal.Name, animal.Data, animal.Pic, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -124,11 +122,12 @@ app.post('/landanimals', (req, res) => {
             res.send(animal);
         }
     });
+
 });
 
-app.put('/landanimals/:id', (req, res) => {
+app.put('/Animal/:id', (req, res) => {
     const animal = req.body;
-    db.run('UPDATE LandAnimal SET Name = ?, Data = ?, Pic = ? WHERE ID = ?', animal.Name, animal.Data, animal.Pic, req.params.id, function (err) {
+    db.run('UPDATE Animal SET Name = ?, Data = ?, Pic = ? WHERE ID = ?', animal.Name, animal.Data, animal.Pic, req.params.id, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -137,8 +136,8 @@ app.put('/landanimals/:id', (req, res) => {
     });
 });
 
-app.delete('/landanimals/:id', (req, res) => {
-    db.run('DELETE FROM LandAnimal WHERE ID = ?', req.params.id, function (err) {
+app.delete('/Animal/:id', (req, res) => {
+    db.run('DELETE FROM Animal WHERE ID = ?', req.params.id, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -147,9 +146,9 @@ app.delete('/landanimals/:id', (req, res) => {
     });
 });
 
-//  CRUD สำหรับ WaterAnimal
-app.get('/wateranimals', (req, res) => {
-    db.all('SELECT * FROM WaterAnimal', (err, rows) => {
+// CRUD สำหรับ Habitat
+app.get('/Habitat', (req, res) => {
+    db.all('SELECT * FROM Habitat', (err, rows) => {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -158,13 +157,13 @@ app.get('/wateranimals', (req, res) => {
     });
 });
 
-app.get('/wateranimals/:id', (req, res) => {
-    db.get('SELECT * FROM WaterAnimal WHERE ID = ?', req.params.id, (err, row) => {
+app.get('/Habitat/:id', (req, res) => {
+    db.get('SELECT * FROM Habitat WHERE ID = ?', req.params.id, (err, row) => {
         if (err) {
             res.status(500).send(err);
         } else {
             if (!row) {
-                res.status(404).send('WaterAnimal Not found');
+                res.status(404).send('Habitat Not found');
             } else {
                 res.json(row);
             }
@@ -172,31 +171,31 @@ app.get('/wateranimals/:id', (req, res) => {
     });
 });
 
-app.post('/wateranimals', (req, res) => {
-    const animal = req.body;
-    db.run('INSERT INTO WaterAnimal (Name, Data, Pic) VALUES (?, ?, ?)', animal.Name, animal.Data, animal.Pic, function (err) {
+app.post('/Habitat', (req, res) => {
+    const habitat = req.body;
+    db.run('INSERT INTO Habitat (Name, Data, Pic) VALUES (?, ?, ?)', habitat.Name, habitat.Data, habitat.Pic, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
-            animal.ID = this.lastID;
-            res.send(animal);
+            habitat.ID = this.lastID;
+            res.send(habitat);
         }
     });
 });
 
-app.put('/wateranimals/:id', (req, res) => {
-    const animal = req.body;
-    db.run('UPDATE WaterAnimal SET Name = ?, Data = ?, Pic = ? WHERE ID = ?', animal.Name, animal.Data, animal.Pic, req.params.id, function (err) {
+app.put('/Habitat/:id', (req, res) => {
+    const habitat = req.body;
+    db.run('UPDATE Habitat SET Name = ?, Data = ?, Pic = ? WHERE ID = ?', habitat.Name, habitat.Data, habitat.Pic, req.params.id, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
-            res.send(animal);
+            res.send(habitat);
         }
     });
 });
 
-app.delete('/wateranimals/:id', (req, res) => {
-    db.run('DELETE FROM WaterAnimal WHERE ID = ?', req.params.id, function (err) {
+app.delete('/Habitat/:id', (req, res) => {
+    db.run('DELETE FROM Habitat WHERE ID = ?', req.params.id, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -205,5 +204,5 @@ app.delete('/wateranimals/:id', (req, res) => {
     });
 });
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+const port = process.env.PORT || 7000;
+app.listen(port, () => console.log(`Server is running on port http://localhost:${port}`));
