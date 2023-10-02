@@ -10,7 +10,7 @@ app.use(express.static(__dirname + '/Myproject'));
 // สร้างตาราง Habitat of Animal
 db.run(`CREATE TABLE IF NOT EXISTS HabitatOfAnimal (
     AnimalID INTEGER PRIMARY KEY,
-    HabitatId INTEGER
+    HabitatID INTEGER
 )`);
 
 // สร้างตาราง Animal
@@ -56,7 +56,7 @@ app.get('/HabitatOfAnimal/:id', (req, res) => {
 
 app.post('/HabitatOfAnimal', (req, res) => {
     const habitatOfAnimal = req.body;
-    db.run('INSERT INTO HabitatOfAnimal (AnimalID, HabitatId) VALUES (?, ?)', habitatOfAnimal.AnimalID, habitatOfAnimal.HabitatId, function (err) {
+    db.run('INSERT INTO HabitatOfAnimal (AnimalID, HabitatID) VALUES (?, ?)', habitatOfAnimal.AnimalID, habitatOfAnimal.HabitatID, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -68,7 +68,7 @@ app.post('/HabitatOfAnimal', (req, res) => {
 
 app.put('/HabitatOfAnimal/:id', (req, res) => {
     const habitatOfAnimal = req.body;
-    db.run('UPDATE HabitatOfAnimal SET AnimalID = ?, HabitatId = ? WHERE AnimalID = ?', habitatOfAnimal.AnimalID, habitatOfAnimal.HabitatId, req.params.id, function (err) {
+    db.run('UPDATE HabitatOfAnimal SET AnimalID = ?, HabitatID = ? WHERE AnimalID = ?', habitatOfAnimal.AnimalID, habitatOfAnimal.HabitatID, req.params.id, function (err) {
         if (err) {
             res.status(500).send(err);
         } else {
