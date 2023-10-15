@@ -9,8 +9,8 @@ app.use(express.static(__dirname + '/Myproject'));
 
 // สร้างตาราง Habitat of Animal
 db.run(`CREATE TABLE IF NOT EXISTS HabitatOfAnimal (
-    AnimalID INTEGER PRIMARY KEY,
-    HabitatID INTEGER
+    AnimalID TEXT PRIMARY KEY,
+    HabitatID TEXT
 )`);
 
 // สร้างตาราง Animal
